@@ -1,0 +1,157 @@
+version: '3.7'
+
+networks:
+  proxy-network:
+    driver: bridge
+    external: true
+
+services:
+  database_pg:
+    stdin_open: true
+    image: postgres
+    container_name: database_pg
+    environment:
+      POSTGRES_DB: $DB_DATABASE
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      PGDATA: /var/lib/postgresql/data/pgdata
+    tty: true
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      - proxy-network
+    ports:
+      - '$DB_PORT:5432'
+    volumes:
+      - ./src/repositories/postgres:/docker-entrypoint-initdb.d
+
+  kong-migrations:
+    image: 'kong'
+    command: kong migrations bootstrap
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_DATABASE: kong_gateway
+      KONG_PG_HOST: database_pg
+      KONG_PG_USER: $DB_USER
+      KONG_PG_PASSWORD: $DB_PASSWORD
+    networks:
+      - proxy-network
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - database_pg
+
+  kong-migrations-up:
+    image: 'kong'
+    command: kong migrations up && kong migrations finish
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_DATABASE: kong_gateway
+      KONG_PG_HOST: database_pg
+      KONG_PG_USER: $DB_USER
+      KONG_PG_PASSWORD: $DB_PASSWORD
+    networks:
+      - proxy-network
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - database_pg
+
+  kong:
+    image: 'kong'
+    user: 'kong'
+    container_name: kong
+    environment:
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_PROXY_LISTEN_SSL: 0.0.0.0:8443
+      KONG_PROXY_LISTEN: 0.0.0.0:8000, 0.0.0.0:8443 ssl
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+      KONG_CASSANDRA_CONTACT_POINTS: db
+      KONG_DATABASE: postgres
+      KONG_PG_DATABASE: kong_gateway
+      KONG_PG_HOST: database_pg
+      KONG_PG_USER: $DB_USER
+      KONG_PG_PASSWORD: $DB_PASSWORD
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      # KONG_SSL: "on"
+      # KONG_SSL_CERT: /cert/STAR_devio_com_br-ca-bundle.crt
+      # KONG_SSL_CERT_KEY: /cert/STAR_devio_com_br.key
+      # ADMIN_SSL_CERT: /cert/STAR_devio_com_br-ca-bundle.crt
+      # ADMIN_SSL_CERT_KEY: /cert/STAR_devio_com_br.key
+      # ADMIN_GUI_SSL_CERT: /cert/STAR_devio_com_br-ca-bundle.crt
+      # ADMIN_GUI_SSL_CERT_KEY: /cert/STAR_devio_com_br.key
+    networks:
+      - proxy-network
+    ports:
+      - '8080:8000/tcp'
+      - '127.0.0.1:8001:8001/tcp'
+      - '9123:8443/tcp'
+      - '127.0.0.1:8444:8444/tcp'
+    healthcheck:
+      test: ['CMD', 'kong', 'health']
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - database_pg
+    # volumes:
+    #     - "./cert:/cert"
+
+  konga:
+    image: pantsel/konga
+    container_name: konga
+    depends_on:
+      - kong
+    ports:
+      - 8081:1337
+    networks:
+      - proxy-network
+
+  app:
+    stdin_open: true
+    container_name: pdv_back_end_app
+    command: sh -c 'yarn build && yarn start:prod'
+    environment:
+      - DATABASE_URL=$DATABASE_URL
+      - SERVER_PORT=$SERVER_PORT
+    tty: true
+    image: image_pdv_back_end_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    deploy:
+      update_config:
+        parallelism: 1
+        delay: 2s
+      # resources:
+      #   limits:
+      #     cpus: "1"
+      #     memory: 1024M
+      #   reservations:
+      #     cpus: "0.50"
+      #     memory: 512M
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+    ports:
+      - '${SERVER_PORT}:${SERVER_PORT}'
+    networks:
+      - proxy-network
+    volumes:
+      - .:/usr/app
+    restart: on-failure
+    depends_on:
+      - database_pg
