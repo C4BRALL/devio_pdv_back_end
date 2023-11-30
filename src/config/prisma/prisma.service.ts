@@ -6,7 +6,8 @@ export class PrismaService extends PrismaClient<
   Prisma.PrismaClientOptions,
   'beforeExit'
 > {
-  create: any;
+  create: unknown;
+
   async onModuleInit() {
     await this.$connect();
   }

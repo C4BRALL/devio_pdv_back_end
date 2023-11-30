@@ -1,4 +1,3 @@
-/* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
