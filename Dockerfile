@@ -8,8 +8,6 @@ COPY package*.json ./
 
 COPY . .
 
-# RUN yarn global add prisma
-
 RUN yarn
 
 CMD ["yarn", "start:prod"]

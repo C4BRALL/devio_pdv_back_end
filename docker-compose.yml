@@ -119,9 +119,9 @@ services:
   app:
     stdin_open: true
     container_name: pdv_back_end_app
-    command: sh -c 'yarn build && yarn start:prod'
+    command: sh -c 'npx prisma generate && yarn build && yarn start:prod'
     environment:
-      - DATABASE_URL=$DATABASE_URL
+      - DATABASE_URL=postgresql://$DB_USER:$DB_PASSWORD@database_pg:5432/$DB_DATABASE?schema=public
       - SERVER_PORT=$SERVER_PORT
     tty: true
     image: image_pdv_back_end_app
