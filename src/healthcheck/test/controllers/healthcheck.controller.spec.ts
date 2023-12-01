@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppService } from '../app.service';
-import { HealthcheckController } from './healthcheck.controller';
+import { HealthcheckService } from '../../healthcheck.service';
+import { HealthcheckController } from '../../controllers/healthcheck.controller';
 
 describe('HealthcheckController', () => {
   let healthcheckController: HealthcheckController;
 
-  const mockAppService = {
+  const mockHealthcheckService = {
     healthfly: jest.fn().mockImplementation(() => {
       return {
         server_health: 'ok',
@@ -19,8 +19,8 @@ describe('HealthcheckController', () => {
       controllers: [HealthcheckController],
       providers: [
         {
-          provide: AppService,
-          useValue: mockAppService,
+          provide: HealthcheckService,
+          useValue: mockHealthcheckService,
         },
       ],
     }).compile();
