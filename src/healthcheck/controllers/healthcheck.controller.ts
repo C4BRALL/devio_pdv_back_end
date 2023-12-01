@@ -6,14 +6,11 @@ export class HealthcheckController {
   constructor(private readonly healthcheckService: HealthcheckService) {}
 
   @Get('health')
-  getHealth(): object {
+  async getHealth(): Promise<object> {
     try {
       return this.healthcheckService.healthfly();
     } catch (error) {
-      throw new HttpException(
-        'Internal server Error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
