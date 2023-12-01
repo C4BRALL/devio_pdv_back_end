@@ -25,7 +25,7 @@ services:
     ports:
       - '$DB_PORT:5432'
     volumes:
-      - ./src/repositories/postgres:/docker-entrypoint-initdb.d
+      - ./src/repositories/db:/docker-entrypoint-initdb.d
 
   kong-migrations:
     image: 'kong'

@@ -6,7 +6,7 @@ describe('HealthcheckController', () => {
   let healthcheckController: HealthcheckController;
 
   const mockAppService = {
-    getHealthfly: jest.fn().mockImplementation(() => {
+    healthfly: jest.fn().mockImplementation(() => {
       return {
         server_health: 'ok',
         date: '2023-11-30T18:12:57.165Z',
