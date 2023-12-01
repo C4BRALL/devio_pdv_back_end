@@ -1,5 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+  binaryTargets   = ["native"]
 }
 
 datasource db {
@@ -7,8 +9,98 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model untitled_table {
-  id         Int      @id @default(autoincrement())
-  name       String?  @db.VarChar(255)
-  created_at DateTime @default(now()) @db.Timestamp(6)
+enum Status {
+  PENDING
+  CANCELED
+  PROGRESS
+  WITHDRAWAL
+  COMPLETED
+}
+
+enum PaymentMethod {
+  CREDITCARD
+  DEBITCARD
+  MONEY
+}
+
+model product {
+  id          String       @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String       @db.VarChar(255)
+  image       String       @db.VarChar(255)
+  description String?      @db.VarChar(255)
+  currency    String       @default("R$") @db.VarChar(255)
+  price       String       @db.VarChar(255)
+  category_id String?      @db.Uuid
+  created_at  DateTime     @default(now()) @db.Timestamp(6)
+  updated_at  DateTime     @default(now()) @updatedAt @db.Timestamp(6)
+  category    category?    @relation(fields: [category_id], references: [id])
+  additional  additional[]
+  order       order[]
+
+  @@map("products")
+}
+
+model category {
+  id          String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String    @db.VarChar(255)
+  description String    @db.VarChar(255)
+  created_at  DateTime  @default(now()) @db.Timestamp(6)
+  updated_at  DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  products    product[]
+
+  @@map("categories")
+}
+
+model additional {
+  id          String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String    @db.VarChar(255)
+  description String    @db.VarChar(255)
+  price       Float     @db.DoublePrecision
+  currency    String    @default("R$") @db.VarChar(255)
+  created_at  DateTime  @default(now()) @db.Timestamp(6)
+  updated_at  DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  product     product[]
+  order_id    order[]
+}
+
+model order {
+  id                  String       @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  description         String?      @db.VarChar(255)
+  product_id          String       @db.Uuid
+  groupOderCode       String       @db.Uuid
+  quantity            Int          @default(1) @db.Integer
+  additional_selected additional[]
+  status              Status       @default(PENDING)
+  created_at          DateTime     @default(now()) @db.Timestamp(6)
+  updated_at          DateTime     @default(now()) @updatedAt @db.Timestamp(6)
+  product             product      @relation(fields: [product_id], references: [id])
+  groupOder           groupOder    @relation(fields: [groupOderCode], references: [id])
+
+  @@map("orders")
+}
+
+model groupOder {
+  id         String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code       Int       @unique @default(autoincrement()) @db.Integer
+  orders     order[]
+  customer   String    @db.VarChar(255)
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  payment    payment[]
+
+  @@map("groupOders")
+}
+
+model payment {
+  id             String        @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  Payment_method PaymentMethod
+  total_price    Float         @db.DoublePrecision
+  amount         Float         @default(0) @db.DoublePrecision
+  change         Float         @default(0) @db.DoublePrecision
+  groupOder_id   String        @db.Uuid
+  created_at     DateTime      @default(now()) @db.Timestamp(6)
+  updated_at     DateTime      @default(now()) @updatedAt @db.Timestamp(6)
+  groupOder      groupOder     @relation(fields: [groupOder_id], references: [id])
+
+  @@map("payments")
 }
