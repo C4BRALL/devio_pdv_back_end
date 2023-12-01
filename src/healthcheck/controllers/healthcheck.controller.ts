@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
 import { HealthcheckService } from '../healthcheck.service';
 
 @Controller()
@@ -7,6 +7,13 @@ export class HealthcheckController {
 
   @Get('health')
   getHealth(): object {
-    return this.healthcheckService.healthfly();
+    try {
+      return this.healthcheckService.healthfly();
+    } catch (error) {
+      throw new HttpException(
+        'Internal server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
