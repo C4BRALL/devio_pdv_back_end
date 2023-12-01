@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HealthcheckRepository } from '../../repositories/healthcheck-repository';
+import { HealthcheckRepository } from '../../../healthcheck/repositories/healthcheck-repository';
 
 describe('HealthcheckRepository', () => {
   let healthcheckRepository: HealthcheckRepository;

@@ -8,10 +8,6 @@ export class HealthcheckService {
   healthfly(): GetHealth.Result {
     try {
       return this.getHealth.health();
-      // return {
-      //   server_health: 'sadaa',
-      //   date: 'ada',
-      // };
     } catch (error) {
       return error;
     }
