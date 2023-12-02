@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UUID } from 'crypto';
 
 export class Products {
   @ApiProperty()
@@ -15,10 +14,10 @@ export class Products {
   'updated_at': Date;
 
   @ApiProperty()
-  'category_id': UUID;
+  'category_id': string;
 
   @ApiProperty()
-  'id': UUID;
+  'id': string;
 
   @ApiProperty()
   'image': string;
