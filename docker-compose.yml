@@ -25,7 +25,7 @@ services:
     ports:
       - '$DB_PORT:5432'
     volumes:
-      - ./src/repositories/db:/docker-entrypoint-initdb.d
+      - ./src/config/db:/docker-entrypoint-initdb.d
 
   kong-migrations:
     image: 'kong'
@@ -119,7 +119,7 @@ services:
   app:
     stdin_open: true
     container_name: pdv_back_end_app
-    command: sh -c 'npx prisma generate && yarn build && yarn start:prod'
+    command: sh -c 'yarn prisma generate && yarn build && yarn start:prod'
     environment:
       - DATABASE_URL=postgresql://$DB_USER:$DB_PASSWORD@database_pg:5432/$DB_DATABASE?schema=public
       - SERVER_PORT=$SERVER_PORT
@@ -141,8 +141,6 @@ services:
       #     memory: 512M
       mode: replicated
       replicas: 1
-      placement:
-        constraints: [node.role == manager]
       restart_policy:
         condition: on-failure
         delay: 10s
