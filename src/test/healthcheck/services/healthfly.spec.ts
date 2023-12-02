@@ -38,7 +38,7 @@ describe('HealthcheckService', () => {
 
         const actualResult = await healthcheckService.healthfly();
 
-        expect(getHealth.health).toBeCalled();
+        expect(getHealth.health).toHaveBeenCalled();
         expect(actualResult).toBe(result);
       });
 
@@ -58,13 +58,13 @@ describe('HealthcheckService', () => {
               },
             },
           },
-          status: 500,
+          status: 424,
           message: 'Http Exception',
           name: 'HttpException',
         };
         const error = new HttpException(
           errorResponse,
-          HttpStatus.INTERNAL_SERVER_ERROR,
+          HttpStatus.FAILED_DEPENDENCY,
         );
         getHealth.health.mockImplementation(() => {
           throw error;
@@ -75,7 +75,7 @@ describe('HealthcheckService', () => {
         } catch (e) {
           expect(getHealth.health).toHaveBeenCalled();
           expect(e).toBeInstanceOf(HttpException);
-          expect(e.getStatus()).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
+          expect(e.getStatus()).toBe(HttpStatus.FAILED_DEPENDENCY);
           expect(e.getResponse()).toEqual(errorResponse);
         }
       });

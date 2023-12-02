@@ -24,7 +24,7 @@ export class HealthcheckRepository implements GetHealthRepository {
           date,
           error,
         },
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.FAILED_DEPENDENCY,
       );
     }
   }

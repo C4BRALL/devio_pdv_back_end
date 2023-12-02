@@ -9,7 +9,6 @@ async function bootstrap() {
     .setTitle('PDV – Fast Food')
     .setDescription('This is a sample server PDV. For this sample')
     .setVersion('1.0')
-    .addTag('pedidos')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
