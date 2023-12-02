@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { GetHealth } from '../core/usecases/get-health';
+import { GetHealthUsecase } from '../core/usecases/get-health';
 
 @Injectable()
 export class HealthcheckService {
-  constructor(private readonly getHealth: GetHealth) {}
+  constructor(private readonly getHealth: GetHealthUsecase) {}
 
-  async healthfly(): Promise<GetHealth.Result> {
+  async healthfly(): Promise<GetHealthUsecase.Result> {
     try {
       return await this.getHealth.health();
     } catch (error) {

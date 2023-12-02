@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { HealthcheckService } from '../../../healthcheck/healthcheck.service';
-import { GetHealth } from '../../../core/usecases/get-health';
+import { GetHealthUsecase } from '../../../core/usecases/get-health';
 
 describe('HealthcheckService', () => {
   let healthcheckService: HealthcheckService;
-  let getHealth: jest.Mocked<GetHealth>;
+  let getHealth: jest.Mocked<GetHealthUsecase>;
 
   beforeEach(async () => {
     getHealth = {
@@ -15,7 +15,7 @@ describe('HealthcheckService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         HealthcheckService,
-        { provide: GetHealth, useValue: getHealth },
+        { provide: GetHealthUsecase, useValue: getHealth },
       ],
     }).compile();
 
@@ -28,7 +28,7 @@ describe('HealthcheckService', () => {
 
   describe('HealthcheckService', () => {
     describe('healthfly', () => {
-      it('should call the GetHealth health method and return its result', async () => {
+      it('should call the GetHealthUsecase health method and return its result', async () => {
         const result = {
           server_health: 'ok',
           database_health: 'ok',
@@ -42,7 +42,7 @@ describe('HealthcheckService', () => {
         expect(actualResult).toBe(result);
       });
 
-      it('should return the error if the GetHealth health method throws an error', async () => {
+      it('should return the error if the GetHealthUsecase health method throws an error', async () => {
         const errorResponse = {
           response: {
             server_health: 'ok',

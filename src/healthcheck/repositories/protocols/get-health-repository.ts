@@ -1,9 +1,9 @@
-import { GetHealth } from 'src/core/usecases/get-health';
+import { GetHealthUsecase } from 'src/core/usecases/get-health';
 
 export abstract class GetHealthRepository {
   abstract health(): Promise<GetHealthRepository.Result>;
 }
 
 export namespace GetHealthRepository {
-  export type Result = GetHealth.Result;
+  export type Result = GetHealthUsecase.Result;
 }

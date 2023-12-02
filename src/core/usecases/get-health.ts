@@ -1,9 +1,9 @@
 import { Healthcheck } from 'src/core/entities/healthcheck/healthcheck';
 
-export abstract class GetHealth {
-  abstract health(): Promise<GetHealth.Result>;
+export abstract class GetHealthUsecase {
+  abstract health(): Promise<GetHealthUsecase.Result>;
 }
 
-export namespace GetHealth {
+export namespace GetHealthUsecase {
   export type Result = Healthcheck;
 }
