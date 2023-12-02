@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { GetHealth } from '../core/usecases/get-health';
 
 @Injectable()
@@ -7,9 +7,9 @@ export class HealthcheckService {
 
   async healthfly(): Promise<GetHealth.Result> {
     try {
-      return this.getHealth.health();
+      return await this.getHealth.health();
     } catch (error) {
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      return error;
     }
   }
 }

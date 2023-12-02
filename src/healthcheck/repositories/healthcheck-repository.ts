@@ -1,5 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { PrismaService } from 'src/config/prisma/prisma.service';
+import { PrismaService } from '../../config/prisma/prisma.service';
 import { GetHealthRepository } from './protocols/get-health-repository';
 
 @Injectable()
@@ -16,11 +16,13 @@ export class HealthcheckRepository implements GetHealthRepository {
         date,
       };
     } catch (error) {
+      const date = new Date().toISOString();
       throw new HttpException(
         {
           server_health: 'ok',
           database_health: 'failed connection database',
-          date: new Date().toISOString(),
+          date,
+          error,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );

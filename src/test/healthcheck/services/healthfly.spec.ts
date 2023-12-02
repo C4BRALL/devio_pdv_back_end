@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { HealthcheckService } from '../../../healthcheck/healthcheck.service';
 import { GetHealth } from '../../../core/usecases/get-health';
 
@@ -27,29 +28,56 @@ describe('HealthcheckService', () => {
 
   describe('HealthcheckService', () => {
     describe('healthfly', () => {
-      it('should call the GetHealth health method and return its result', () => {
+      it('should call the GetHealth health method and return its result', async () => {
         const result = {
           server_health: 'ok',
+          database_health: 'ok',
           date: '2023-12-01T00:00:00.000Z',
         };
-        getHealth.health.mockReturnValue(result);
+        getHealth.health.mockResolvedValue(result);
 
-        const actualResult = healthcheckService.healthfly();
+        const actualResult = await healthcheckService.healthfly();
 
         expect(getHealth.health).toBeCalled();
         expect(actualResult).toBe(result);
       });
 
-      it('should return the error if the GetHealth health method throws an error', () => {
-        const error = new Error('Test error');
+      it('should return the error if the GetHealth health method throws an error', async () => {
+        const errorResponse = {
+          response: {
+            server_health: 'ok',
+            database_health: 'failed connection database',
+            date: '2023-12-02T18:59:06.087Z',
+            error: {
+              name: 'PrismaClientKnownRequestError',
+              code: 'P1001',
+              clientVersion: '5.6.0',
+              meta: {
+                database_host: 'localhost',
+                database_port: 5001,
+              },
+            },
+          },
+          status: 500,
+          message: 'Http Exception',
+          name: 'HttpException',
+        };
+        const error = new HttpException(
+          errorResponse,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
         getHealth.health.mockImplementation(() => {
           throw error;
         });
 
-        const actualResult = healthcheckService.healthfly();
-
-        expect(getHealth.health).toBeCalled();
-        expect(actualResult).toBe(error);
+        try {
+          await healthcheckService.healthfly();
+        } catch (e) {
+          expect(getHealth.health).toHaveBeenCalled();
+          expect(e).toBeInstanceOf(HttpException);
+          expect(e.getStatus()).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
+          expect(e.getResponse()).toEqual(errorResponse);
+        }
       });
     });
   });

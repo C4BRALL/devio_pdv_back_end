@@ -9,6 +9,7 @@ describe('HealthcheckController', () => {
     healthfly: jest.fn().mockImplementation(() => {
       return {
         server_health: 'ok',
+        database_health: 'ok',
         date: '2023-11-30T18:12:57.165Z',
       };
     }),
@@ -31,9 +32,10 @@ describe('HealthcheckController', () => {
   });
 
   describe('root', () => {
-    it('should return {server_health: "ok", date: string}', () => {
-      expect(healthcheckController.getHealth()).toMatchObject({
+    it('should return {server_health: "ok", database_health: "ok", date: string}', async () => {
+      expect(await healthcheckController.getHealth()).toMatchObject({
         server_health: 'ok',
+        database_health: 'ok',
         date: '2023-11-30T18:12:57.165Z',
       });
     });
