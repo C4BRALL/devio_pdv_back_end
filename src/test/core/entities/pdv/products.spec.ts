@@ -1,14 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Products } from '../../../../core/entities/pdv/product';
+import { Product } from '../../../../core/entities/pdv/product';
 
 describe('Products', () => {
   it('should create a product with correct values', () => {
-    const product = new Products();
+    const product = new Product();
     product.name = 'Test Product';
     product.description = 'This is a test product';
     product.created_at = new Date();
     product.updated_at = new Date();
-    product.category_id = uuidv4();
     product.id = uuidv4();
     product.image = 'test.jpg';
     product.currency = 'USD';
@@ -18,7 +17,6 @@ describe('Products', () => {
     expect(product.description).toEqual('This is a test product');
     expect(product.created_at).toBeTruthy();
     expect(product.updated_at).toBeTruthy();
-    expect(product.category_id).toBeTruthy();
     expect(product.id).toBeTruthy();
     expect(product.image).toEqual('test.jpg');
     expect(product.currency).toEqual('USD');

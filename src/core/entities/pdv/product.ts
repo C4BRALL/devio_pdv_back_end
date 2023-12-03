@@ -1,30 +1,19 @@
-import { ApiProperty } from '@nestjs/swagger';
-
-export class Products {
-  @ApiProperty()
-  'name': string;
-
-  @ApiProperty()
-  'description': string;
-
-  @ApiProperty()
-  'created_at': Date;
-
-  @ApiProperty()
-  'updated_at': Date;
-
-  @ApiProperty()
-  'category_id': string;
-
-  @ApiProperty()
+export class Product {
   'id': string;
 
-  @ApiProperty()
+  'name': string;
+
   'image': string;
 
-  @ApiProperty()
+  'description': string;
+
   'currency': string;
 
-  @ApiProperty()
   'price': number;
+
+  'category_id': string;
+
+  'created_at': Date;
+
+  'updated_at': Date;
 }

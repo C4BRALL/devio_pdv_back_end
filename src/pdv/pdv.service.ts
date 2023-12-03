@@ -1,27 +1,60 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
-import { CreatePdvDto } from './dto/create-pdv.dto';
-import { UpdatePdvDto } from './dto/update-pdv.dto';
+import { ListProductsRepository } from './repositories/protocols/list-products-repository';
+import { ListCategoriesRepository } from './repositories/protocols/list-categories.reposirory';
+import { ListProductsByCategoryRepository } from './repositories/protocols/products-by-category-repository';
+import { ListAdditionalByProductRepository } from './repositories/protocols/list-additional-by-product-repository';
+import { CreateOrderRepository } from './repositories/protocols/create-order-repository';
+import { ListOrdersRepository } from './repositories/protocols/list-orders-repository';
+import { UpdateOrderStatusRepository } from './repositories/protocols/update-order-status-repository';
 
 @Injectable()
 export class PdvService {
-  create(createPdvDto: CreatePdvDto) {
-    return 'This action adds a new api';
+  constructor(
+    private readonly listProductsRepository: ListProductsRepository,
+    private readonly listCategoriesRepository: ListCategoriesRepository,
+    private readonly listProductsByCategoryRepository: ListProductsByCategoryRepository,
+    private readonly listAdditionalByProductRepository: ListAdditionalByProductRepository,
+    private readonly createOrderRepository: CreateOrderRepository,
+    private readonly listOrdersRepository: ListOrdersRepository,
+    private readonly updateOrderStatusRepository: UpdateOrderStatusRepository,
+  ) {}
+
+  listProducts(
+    params: ListProductsRepository.Params,
+  ): Promise<ListProductsRepository.Result> {
+    return this.listProductsRepository.findAll(params);
   }
 
-  findAll() {
-    return `This action returns all api`;
+  listCategories(
+    params: ListCategoriesRepository.Params,
+  ): Promise<ListCategoriesRepository.Result> {
+    return this.listCategoriesRepository.findAll(params);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} api`;
+  productsByCategory(params: ListProductsByCategoryRepository.Params) {
+    return this.listProductsByCategoryRepository.findByCategory(params);
   }
 
-  update(id: number, updatePdvDto: UpdatePdvDto) {
-    return `This action updates a #${id} api`;
+  async additional(params: ListAdditionalByProductRepository.Params) {
+    return this.listAdditionalByProductRepository.findAdditional(params);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} api`;
+  async purchase(
+    params: CreateOrderRepository.Params,
+  ): Promise<CreateOrderRepository.Result> {
+    return this.createOrderRepository.create(params);
+  }
+
+  async getOrders(
+    params: ListOrdersRepository.Params,
+  ): Promise<ListOrdersRepository.Result> {
+    return this.listOrdersRepository.findAll(params);
+  }
+
+  async updateStatus(
+    params: UpdateOrderStatusRepository.Params,
+  ): Promise<UpdateOrderStatusRepository.Result> {
+    return this.updateOrderStatusRepository.updateStatus(params);
   }
 }
