@@ -5,6 +5,7 @@ import { UpdatePdvDto } from './dto/update-pdv.dto';
 import { ListProductsRepository } from './repositories/protocols/list-products-repository';
 import { ListCategoriesRepository } from './repositories/protocols/list-categories.reposirory';
 import { ListProductsByCategoryRepository } from './repositories/protocols/products-by-category-repository';
+import { ListAdditionalByProductRepository } from './repositories/protocols/list-additional-by-product-repository';
 
 @Injectable()
 export class PdvService {
@@ -12,6 +13,7 @@ export class PdvService {
     private readonly listProductsRepository: ListProductsRepository,
     private readonly listCategoriesRepository: ListCategoriesRepository,
     private readonly listProductsByCategoryRepository: ListProductsByCategoryRepository,
+    private readonly listAdditionalByProductRepository: ListAdditionalByProductRepository,
   ) {}
 
   create(createPdvDto: CreatePdvDto) {
@@ -46,11 +48,11 @@ export class PdvService {
     }
   }
 
-  update(id: number, updatePdvDto: UpdatePdvDto) {
-    return `This action updates a #${id} api`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} api`;
+  async additional(params: ListAdditionalByProductRepository.Params) {
+    try {
+      return this.listAdditionalByProductRepository.findAdditional(params);
+    } catch (error) {
+      return error;
+    }
   }
 }

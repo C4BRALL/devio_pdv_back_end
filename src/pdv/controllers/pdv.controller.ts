@@ -1,20 +1,17 @@
 import {
   Controller,
   Get,
-  Body,
-  Patch,
   Param,
-  Delete,
   Query,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PdvService } from '../pdv.service';
-import { UpdatePdvDto } from '../dto/update-pdv.dto';
 import { FindAllProductsDto } from '../dto/find-all-products.dto';
 import { FindAllCategoryDto } from '../dto/find-all-category.dto';
 import { FindAllProductsByCategoryDto } from '../dto/find-all-products-by-category.dto';
+import { FindAdditionalByProductsDto } from '../dto/additional-by-product.dto';
 
 @Controller('api')
 export class PdvController {
@@ -151,13 +148,15 @@ export class PdvController {
     }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePdvDto: UpdatePdvDto) {
-    return this.pdvService.update(+id, updatePdvDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pdvService.remove(+id);
+  @ApiTags('Products')
+  @Get('products/additional/:product_id')
+  additional(@Param('product_id') productId: string) {
+    try {
+      const findAdditional = new FindAdditionalByProductsDto();
+      findAdditional.id = productId;
+      return this.pdvService.additional(findAdditional);
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

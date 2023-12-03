@@ -6,6 +6,7 @@ import { PdvController } from './controllers/pdv.controller';
 import { ListCategoriesRepository } from './repositories/protocols/list-categories.reposirory';
 import { CategoriesRepository } from './repositories/categories-repository';
 import { ListProductsByCategoryRepository } from './repositories/protocols/products-by-category-repository';
+import { ListAdditionalByProductRepository } from './repositories/protocols/list-additional-by-product-repository';
 
 @Module({
   controllers: [PdvController],
@@ -17,6 +18,10 @@ import { ListProductsByCategoryRepository } from './repositories/protocols/produ
     },
     {
       provide: ListProductsByCategoryRepository,
+      useClass: ProductsRepository,
+    },
+    {
+      provide: ListAdditionalByProductRepository,
       useClass: ProductsRepository,
     },
     {
