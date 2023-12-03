@@ -2,9 +2,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { CreateOrderRepository } from './protocols/create-order-repository';
+import { ListOrdersRepository } from './protocols/list-orders-repository';
 
 @Injectable()
-export class OrdersRepository implements CreateOrderRepository {
+export class OrdersRepository
+  implements CreateOrderRepository, ListOrdersRepository
+{
   constructor(private readonly prisma: PrismaService) {}
 
   async create(
@@ -44,6 +47,44 @@ export class OrdersRepository implements CreateOrderRepository {
       });
       return [customerOrders];
     } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
+  async findAll(
+    params?: ListOrdersRepository.Params,
+  ): Promise<ListOrdersRepository.Result> {
+    try {
+      const orders = await this.prisma.order.findMany({
+        where: { status: params.status },
+        select: {
+          id: true,
+          description: true,
+          status: true,
+          product_id: true,
+          quantity: true,
+          additional_selected: true,
+          paymentId: true,
+          created_at: true,
+          updated_at: true,
+        },
+        orderBy: {
+          created_at: 'asc',
+        },
+      });
+      return orders;
+    } catch (error) {
+      console.log({ error });
+
       throw new HttpException(
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,

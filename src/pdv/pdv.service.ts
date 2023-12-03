@@ -5,6 +5,7 @@ import { ListCategoriesRepository } from './repositories/protocols/list-categori
 import { ListProductsByCategoryRepository } from './repositories/protocols/products-by-category-repository';
 import { ListAdditionalByProductRepository } from './repositories/protocols/list-additional-by-product-repository';
 import { CreateOrderRepository } from './repositories/protocols/create-order-repository';
+import { ListOrdersRepository } from './repositories/protocols/list-orders-repository';
 
 @Injectable()
 export class PdvService {
@@ -14,51 +15,38 @@ export class PdvService {
     private readonly listProductsByCategoryRepository: ListProductsByCategoryRepository,
     private readonly listAdditionalByProductRepository: ListAdditionalByProductRepository,
     private readonly createOrderRepository: CreateOrderRepository,
+    private readonly listOrdersRepository: ListOrdersRepository,
   ) {}
 
   listProducts(
     params: ListProductsRepository.Params,
   ): Promise<ListProductsRepository.Result> {
-    try {
-      return this.listProductsRepository.findAll(params);
-    } catch (error) {
-      return error;
-    }
+    return this.listProductsRepository.findAll(params);
   }
 
   listCategories(
     params: ListCategoriesRepository.Params,
   ): Promise<ListCategoriesRepository.Result> {
-    try {
-      return this.listCategoriesRepository.findAll(params);
-    } catch (error) {
-      return error;
-    }
+    return this.listCategoriesRepository.findAll(params);
   }
 
   productsByCategory(params: ListProductsByCategoryRepository.Params) {
-    try {
-      return this.listProductsByCategoryRepository.findByCategory(params);
-    } catch (error) {
-      return error;
-    }
+    return this.listProductsByCategoryRepository.findByCategory(params);
   }
 
   async additional(params: ListAdditionalByProductRepository.Params) {
-    try {
-      return this.listAdditionalByProductRepository.findAdditional(params);
-    } catch (error) {
-      return error;
-    }
+    return this.listAdditionalByProductRepository.findAdditional(params);
   }
 
   async purchase(
     params: CreateOrderRepository.Params,
   ): Promise<CreateOrderRepository.Result> {
-    try {
-      return this.createOrderRepository.create(params);
-    } catch (error) {
-      return error;
-    }
+    return this.createOrderRepository.create(params);
+  }
+
+  async getOrders(
+    params: ListOrdersRepository.Params,
+  ): Promise<ListOrdersRepository.Result> {
+    return this.listOrdersRepository.findAll(params);
   }
 }

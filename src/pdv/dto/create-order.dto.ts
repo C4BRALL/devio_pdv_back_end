@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PaymentMethod, StatusOrder } from 'src/core/usecases/pdv/create-order';
 
 export class CreateOrderDto {
   @ApiProperty()
@@ -15,7 +14,7 @@ export class CreateOrderDto {
   additional: string[];
 
   @ApiProperty()
-  status: StatusOrder;
+  status: 'PENDING' | 'CANCELED' | 'PROGRESS' | 'COMPLETED' | 'WITHDRAWAL';
 
   @ApiProperty()
   customer: string;
@@ -24,7 +23,7 @@ export class CreateOrderDto {
   groupOrderCode: string;
 
   @ApiProperty()
-  payment_method: PaymentMethod;
+  payment_method: 'CREDITCARD' | 'DEBITCARD' | 'MONEY';
 
   @ApiProperty()
   total_price: number;

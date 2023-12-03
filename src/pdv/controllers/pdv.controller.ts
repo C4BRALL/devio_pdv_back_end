@@ -11,6 +11,7 @@ import { ListProductsRepository } from '../repositories/protocols/list-products-
 import { ListCategoriesRepository } from '../repositories/protocols/list-categories.reposirory';
 import { ListProductsByCategoryRepository } from '../repositories/protocols/products-by-category-repository';
 import { CreateOrderRepository } from '../repositories/protocols/create-order-repository';
+import { ListOrdersRepository } from '../repositories/protocols/list-orders-repository';
 
 @Controller('api')
 export class PdvController {
@@ -209,6 +210,18 @@ export class PdvController {
   ): Promise<CreateOrderRepository.Result> {
     try {
       return this.pdvService.purchase(createOrderDto);
+    } catch (error) {
+      return error;
+    }
+  }
+
+  @Get('orders')
+  async orders(
+    @Query()
+    status?: ListOrdersRepository.Params,
+  ): Promise<CreateOrderRepository.Result> {
+    try {
+      return this.pdvService.getOrders(status);
     } catch (error) {
       return error;
     }
