@@ -69,40 +69,41 @@ model order {
   id                  String       @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   description         String?      @db.VarChar(255)
   product_id          String       @db.Uuid
-  groupOderCode       String       @db.Uuid
   quantity            Int          @default(1) @db.Integer
+  paymentId           String?      @db.Uuid
   additional_selected additional[]
   status              Status       @default(PENDING)
   created_at          DateTime     @default(now()) @db.Timestamp(6)
   updated_at          DateTime     @default(now()) @updatedAt @db.Timestamp(6)
   product             product      @relation(fields: [product_id], references: [id])
-  groupOder           groupOder    @relation(fields: [groupOderCode], references: [id])
+  payment             payment?     @relation(fields: [paymentId], references: [id])
 
   @@map("orders")
 }
 
-model groupOder {
-  id         String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  code       Int       @unique @default(autoincrement()) @db.Integer
-  orders     order[]
-  customer   String    @db.VarChar(255)
-  created_at DateTime  @default(now()) @db.Timestamp(6)
-  updated_at DateTime  @default(now()) @updatedAt @db.Timestamp(6)
-  payment    payment[]
+// model groupOrder {
+//   id         String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   code       Int       @unique @default(autoincrement()) @db.Integer
+//   orders     order[]
+//   customer   String    @db.VarChar(255)
+//   created_at DateTime  @default(now()) @db.Timestamp(6)
+//   updated_at DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+//   payment    payment[]
 
-  @@map("groupOders")
-}
+//   @@map("groupOrders")
+// }
 
 model payment {
   id             String        @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  Payment_method PaymentMethod
+  code           Int           @unique @default(autoincrement()) @db.Integer
+  orders         order[]
+  customer       String        @db.VarChar(255)
+  payment_method PaymentMethod
   total_price    Float         @db.DoublePrecision
   amount         Float         @default(0) @db.DoublePrecision
   change         Float         @default(0) @db.DoublePrecision
-  groupOder_id   String        @db.Uuid
   created_at     DateTime      @default(now()) @db.Timestamp(6)
   updated_at     DateTime      @default(now()) @updatedAt @db.Timestamp(6)
-  groupOder      groupOder     @relation(fields: [groupOder_id], references: [id])
 
   @@map("payments")
 }

@@ -1,8 +1,10 @@
 import {
   Controller,
   Get,
+  Post,
   Param,
   Query,
+  Body,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -12,6 +14,7 @@ import { FindAllProductsDto } from '../dto/find-all-products.dto';
 import { FindAllCategoryDto } from '../dto/find-all-category.dto';
 import { FindAllProductsByCategoryDto } from '../dto/find-all-products-by-category.dto';
 import { FindAdditionalByProductsDto } from '../dto/additional-by-product.dto';
+import { CreateOrderDto } from '../dto/create-order.dto';
 
 @Controller('api')
 export class PdvController {
@@ -149,12 +152,48 @@ export class PdvController {
   }
 
   @ApiTags('Products')
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: [
+        {
+          id: '48c6983b-0ff1-4fa0-9064-de74874b3580',
+          name: 'Queijo cheddar',
+          image: 'data:image/png;base64,iVBORw0KGgoAAAANSUh',
+          description: '10g',
+          price: 1.5,
+          currency: 'R$',
+          created_at: '2023-12-01T22:22:37.027Z',
+          updated_at: '2023-12-01T22:22:37.027Z',
+        },
+        {
+          id: '18cca62b-6cba-47a5-b3a3-57ed4ead6632',
+          name: 'Molho barbecue',
+          image: 'data:image/png;base64,iVBORw0KG',
+          description: '',
+          price: 0.5,
+          currency: 'R$',
+          created_at: '2023-12-01T22:22:37.043Z',
+          updated_at: '2023-12-01T22:22:37.043Z',
+        },
+      ],
+    },
+  })
   @Get('products/additional/:product_id')
   additional(@Param('product_id') productId: string) {
     try {
       const findAdditional = new FindAdditionalByProductsDto();
       findAdditional.id = productId;
       return this.pdvService.additional(findAdditional);
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Post('products/buy')
+  purchase(@Body() data: CreateOrderDto[]) {
+    try {
+      return this.pdvService.purchase(data);
     } catch (error) {
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
