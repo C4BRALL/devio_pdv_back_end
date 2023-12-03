@@ -1,4 +1,4 @@
-import { Products } from '../entities/pdv/product';
+import { Product } from '../../entities/pdv/product';
 
 export abstract class ListProductsUsecase {
   abstract findAll(
@@ -8,8 +8,9 @@ export abstract class ListProductsUsecase {
 
 export namespace ListProductsUsecase {
   export type Params = {
-    take: number;
-    skip: number;
+    search?: string;
+    take?: number;
+    skip?: number;
   };
-  export type Result = Products[];
+  export type Result = Product[];
 }

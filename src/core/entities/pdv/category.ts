@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class Product {
+export class Category {
   @ApiProperty()
   'id': string;
 
@@ -12,15 +12,6 @@ export class Product {
 
   @ApiProperty()
   'description': string;
-
-  @ApiProperty()
-  'currency': string;
-
-  @ApiProperty()
-  'price': number;
-
-  @ApiProperty()
-  'category_id': string;
 
   @ApiProperty()
   'created_at': Date;

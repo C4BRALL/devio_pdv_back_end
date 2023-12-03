@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Products } from '../../../../core/entities/pdv/product';
+import { Product } from '../../../../core/entities/pdv/product';
 
 describe('Products', () => {
   it('should create a product with correct values', () => {
-    const product = new Products();
+    const product = new Product();
     product.name = 'Test Product';
     product.description = 'This is a test product';
     product.created_at = new Date();

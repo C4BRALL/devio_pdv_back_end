@@ -1,9 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class FindAllProductsDto {
-  @ApiProperty()
-  search?: string;
-
+export class FindAllCategoryDto {
   @ApiProperty()
   take?: number;
 
