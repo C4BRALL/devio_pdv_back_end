@@ -1,12 +1,17 @@
 /* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/config/prisma/prisma.service';
+import { UpdateOrderStatusUsecase } from 'src/core/usecases/pdv/update-order-status';
 import { CreateOrderRepository } from './protocols/create-order-repository';
 import { ListOrdersRepository } from './protocols/list-orders-repository';
+import { UpdateOrderStatusRepository } from './protocols/update-order-status-repository';
 
 @Injectable()
 export class OrdersRepository
-  implements CreateOrderRepository, ListOrdersRepository
+  implements
+    CreateOrderRepository,
+    ListOrdersRepository,
+    UpdateOrderStatusRepository
 {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -83,8 +88,6 @@ export class OrdersRepository
       });
       return orders;
     } catch (error) {
-      console.log({ error });
-
       throw new HttpException(
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -92,7 +95,43 @@ export class OrdersRepository
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
         {
-          cause: error,
+          cause: error?.message,
+        },
+      );
+    }
+  }
+
+  async updateStatus(
+    params: UpdateOrderStatusUsecase.Params,
+  ): Promise<UpdateOrderStatusUsecase.Result> {
+    try {
+      const orderUpdated = await this.prisma.order.update({
+        where: {
+          id: params.id,
+        },
+        data: {
+          status: params.newStatus,
+        },
+        select: {
+          id: true,
+          status: true,
+          product: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+      return orderUpdated;
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        {
+          cause: error?.message,
         },
       );
     }

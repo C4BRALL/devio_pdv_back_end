@@ -6,6 +6,7 @@ import { ListProductsByCategoryRepository } from './repositories/protocols/produ
 import { ListAdditionalByProductRepository } from './repositories/protocols/list-additional-by-product-repository';
 import { CreateOrderRepository } from './repositories/protocols/create-order-repository';
 import { ListOrdersRepository } from './repositories/protocols/list-orders-repository';
+import { UpdateOrderStatusRepository } from './repositories/protocols/update-order-status-repository';
 
 @Injectable()
 export class PdvService {
@@ -16,6 +17,7 @@ export class PdvService {
     private readonly listAdditionalByProductRepository: ListAdditionalByProductRepository,
     private readonly createOrderRepository: CreateOrderRepository,
     private readonly listOrdersRepository: ListOrdersRepository,
+    private readonly updateOrderStatusRepository: UpdateOrderStatusRepository,
   ) {}
 
   listProducts(
@@ -48,5 +50,11 @@ export class PdvService {
     params: ListOrdersRepository.Params,
   ): Promise<ListOrdersRepository.Result> {
     return this.listOrdersRepository.findAll(params);
+  }
+
+  async updateStatus(
+    params: UpdateOrderStatusRepository.Params,
+  ): Promise<UpdateOrderStatusRepository.Result> {
+    return this.updateOrderStatusRepository.updateStatus(params);
   }
 }

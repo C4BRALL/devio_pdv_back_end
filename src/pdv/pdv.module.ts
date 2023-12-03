@@ -10,6 +10,7 @@ import { ListAdditionalByProductRepository } from './repositories/protocols/list
 import { CreateOrderRepository } from './repositories/protocols/create-order-repository';
 import { OrdersRepository } from './repositories/orders-repository';
 import { ListOrdersRepository } from './repositories/protocols/list-orders-repository';
+import { UpdateOrderStatusRepository } from './repositories/protocols/update-order-status-repository';
 
 @Module({
   controllers: [PdvController],
@@ -37,6 +38,10 @@ import { ListOrdersRepository } from './repositories/protocols/list-orders-repos
     },
     {
       provide: ListOrdersRepository,
+      useClass: OrdersRepository,
+    },
+    {
+      provide: UpdateOrderStatusRepository,
       useClass: OrdersRepository,
     },
   ],

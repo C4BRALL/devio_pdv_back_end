@@ -12,6 +12,8 @@ import { ListCategoriesRepository } from '../repositories/protocols/list-categor
 import { ListProductsByCategoryRepository } from '../repositories/protocols/products-by-category-repository';
 import { CreateOrderRepository } from '../repositories/protocols/create-order-repository';
 import { ListOrdersRepository } from '../repositories/protocols/list-orders-repository';
+import { UpdateOrderStatusDto } from '../dto/update-order-status.dto';
+import { UpdateOrderStatusRepository } from '../repositories/protocols/update-order-status-repository';
 
 @Controller('api')
 export class PdvController {
@@ -215,6 +217,79 @@ export class PdvController {
     }
   }
 
+  @ApiTags('Orders')
+  @ApiOperation({ summary: 'List orders by status or without status filter' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: [
+        {
+          id: '9aa61649-d396-4b7d-a071-dadaaa194981',
+          description: 'string',
+          status: 'PENDING',
+          product_id: '007255ff-955a-489c-9eae-16f728111f6b',
+          quantity: 1,
+          additional_selected: [
+            {
+              id: '48c6983b-0ff1-4fa0-9064-de74874b3580',
+              name: 'Queijo cheddar',
+              description: '10g',
+              image: 'data:image/png;base64,iVBORw0KGgoAA',
+              price: 1.5,
+              currency: 'R$',
+              created_at: '2023-12-03T07:11:44.486Z',
+              updated_at: '2023-12-03T07:11:44.486Z',
+            },
+            {
+              id: '18cca62b-6cba-47a5-b3a3-57ed4ead6632',
+              name: 'Molho barbecue',
+              description: '',
+              image: 'data:image/png;base64,iVBORw0KGg',
+              price: 0.5,
+              currency: 'R$',
+              created_at: '2023-12-03T07:11:44.505Z',
+              updated_at: '2023-12-03T07:11:44.505Z',
+            },
+          ],
+          paymentId: '567cda2b-55fa-4abf-929d-433f577e9457',
+          created_at: '2023-12-03T07:23:08.866Z',
+          updated_at: '2023-12-03T07:23:08.887Z',
+        },
+        {
+          id: '35714e9f-a3d4-44e0-99a5-ba3c0a17f5e9',
+          description: 'string',
+          status: 'PENDING',
+          product_id: '007255ff-955a-489c-9eae-16f728111f6b',
+          quantity: 1,
+          additional_selected: [
+            {
+              id: '48c6983b-0ff1-4fa0-9064-de74874b3580',
+              name: 'Queijo cheddar',
+              description: '10g',
+              image: 'data:image/png;base64,iVBORw0K',
+              price: 1.5,
+              currency: 'R$',
+              created_at: '2023-12-03T07:11:44.486Z',
+              updated_at: '2023-12-03T07:11:44.486Z',
+            },
+            {
+              id: '18cca62b-6cba-47a5-b3a3-57ed4ead6632',
+              name: 'Molho barbecue',
+              description: '',
+              image: 'data:image/png;base64,iVBORw0KGgoAAAA',
+              price: 0.5,
+              currency: 'R$',
+              created_at: '2023-12-03T07:11:44.505Z',
+              updated_at: '2023-12-03T07:11:44.505Z',
+            },
+          ],
+          paymentId: '567cda2b-55fa-4abf-929d-433f577e9457',
+          created_at: '2023-12-03T07:23:08.866Z',
+          updated_at: '2023-12-03T07:23:08.887Z',
+        },
+      ],
+    },
+  })
   @Get('orders')
   async orders(
     @Query()
@@ -222,6 +297,21 @@ export class PdvController {
   ): Promise<CreateOrderRepository.Result> {
     try {
       return this.pdvService.getOrders(status);
+    } catch (error) {
+      return error;
+    }
+  }
+
+  @Post('orders/:orderId')
+  async updateOrderStatus(
+    @Param('orderId') orderId: string,
+    @Body() updateOrderStatusDto: UpdateOrderStatusDto,
+  ): Promise<UpdateOrderStatusRepository.Result> {
+    try {
+      return this.pdvService.updateStatus({
+        id: orderId,
+        newStatus: updateOrderStatusDto.status,
+      });
     } catch (error) {
       return error;
     }
