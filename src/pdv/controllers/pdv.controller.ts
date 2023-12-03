@@ -1,20 +1,16 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Param,
-  Query,
-  Body,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PdvService } from '../pdv.service';
 import { FindAllProductsDto } from '../dto/find-all-products.dto';
 import { FindAllCategoryDto } from '../dto/find-all-category.dto';
 import { FindAllProductsByCategoryDto } from '../dto/find-all-products-by-category.dto';
 import { FindAdditionalByProductsDto } from '../dto/additional-by-product.dto';
 import { CreateOrderDto } from '../dto/create-order.dto';
+import { ListAdditionalByProductRepository } from '../repositories/protocols/list-additional-by-product-repository';
+import { ListProductsRepository } from '../repositories/protocols/list-products-repository';
+import { ListCategoriesRepository } from '../repositories/protocols/list-categories.reposirory';
+import { ListProductsByCategoryRepository } from '../repositories/protocols/products-by-category-repository';
+import { CreateOrderRepository } from '../repositories/protocols/create-order-repository';
 
 @Controller('api')
 export class PdvController {
@@ -52,11 +48,11 @@ export class PdvController {
     },
   })
   @Get('products')
-  allProducts(
+  async allProducts(
     @Query('take') take?: string,
     @Query('skip') skip?: string,
     @Query('search') search?: string,
-  ) {
+  ): Promise<ListProductsRepository.Result> {
     try {
       const findProducts = new FindAllProductsDto();
       findProducts.search = search;
@@ -64,7 +60,7 @@ export class PdvController {
       findProducts.skip = +skip;
       return this.pdvService.listProducts(findProducts);
     } catch (error) {
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      return error;
     }
   }
 
@@ -93,14 +89,17 @@ export class PdvController {
     },
   })
   @Get('categories')
-  allCategories(@Query('take') take?: number, @Query('skip') skip?: number) {
+  async allCategories(
+    @Query('take') take?: number,
+    @Query('skip') skip?: number,
+  ): Promise<ListCategoriesRepository.Result> {
     try {
       const findCategories = new FindAllCategoryDto();
       findCategories.take = +take;
       findCategories.skip = +skip;
       return this.pdvService.listCategories(findCategories);
     } catch (error) {
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      return error;
     }
   }
 
@@ -135,11 +134,11 @@ export class PdvController {
     },
   })
   @Get('products/:category_id')
-  allProductsByCategory(
+  async allProductsByCategory(
     @Param('category_id') categoryId: string,
     @Query('take') take?: string,
     @Query('skip') skip?: string,
-  ) {
+  ): Promise<ListProductsByCategoryRepository.Result> {
     try {
       const findProducts = new FindAllProductsByCategoryDto();
       findProducts.id = categoryId;
@@ -147,7 +146,7 @@ export class PdvController {
       findProducts.skip = +skip;
       return this.pdvService.productsByCategory(findProducts);
     } catch (error) {
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      return error;
     }
   }
 
@@ -180,22 +179,38 @@ export class PdvController {
     },
   })
   @Get('products/additional/:product_id')
-  additional(@Param('product_id') productId: string) {
+  async additional(
+    @Param('product_id') productId: string,
+  ): Promise<ListAdditionalByProductRepository.Result> {
     try {
       const findAdditional = new FindAdditionalByProductsDto();
       findAdditional.id = productId;
       return this.pdvService.additional(findAdditional);
     } catch (error) {
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      return error;
     }
   }
 
-  @Post('products/buy')
-  purchase(@Body() data: CreateOrderDto[]) {
+  @ApiTags('Orders')
+  @ApiOperation({ summary: 'Create order and payment' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: [
+        {
+          id: '18cca62b-6cba-47a5-b3a3-57ed4ead6632',
+        },
+      ],
+    },
+  })
+  @Post('products/purchase')
+  async purchase(
+    @Body() createOrderDto: CreateOrderDto[],
+  ): Promise<CreateOrderRepository.Result> {
     try {
-      return this.pdvService.purchase(data);
+      return this.pdvService.purchase(createOrderDto);
     } catch (error) {
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      return error;
     }
   }
 }
