@@ -2,15 +2,26 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePdvDto } from './dto/create-pdv.dto';
 import { UpdatePdvDto } from './dto/update-pdv.dto';
+import { ListProductsRepository } from './repositories/protocols/list-products-repository';
 
 @Injectable()
 export class PdvService {
+  constructor(
+    private readonly listProductsRepository: ListProductsRepository,
+  ) {}
+
   create(createPdvDto: CreatePdvDto) {
     return 'This action adds a new api';
   }
 
-  findAll() {
-    return `This action returns all api`;
+  listPorducts(
+    params: ListProductsRepository.Params,
+  ): Promise<ListProductsRepository.Result> {
+    try {
+      return this.listProductsRepository.findAll(params);
+    } catch (error) {
+      return error;
+    }
   }
 
   findOne(id: number) {

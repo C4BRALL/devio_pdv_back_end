@@ -1,9 +1,15 @@
 import { Products } from '../entities/pdv/product';
 
 export abstract class ListProductsUsecase {
-  abstract findAll(): Promise<ListProductsUsecase.Result>;
+  abstract findAll(
+    params: ListProductsUsecase.Params,
+  ): Promise<ListProductsUsecase.Result>;
 }
 
 export namespace ListProductsUsecase {
-  export type Result = Products;
+  export type Params = {
+    take: number;
+    skip: number;
+  };
+  export type Result = Products[];
 }
