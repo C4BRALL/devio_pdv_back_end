@@ -20,6 +20,10 @@ export class PdvController {
   constructor(private readonly pdvService: PdvService) {}
 
   @ApiTags('Products')
+  @ApiOperation({
+    summary:
+      'Bring all products with search params and pagination or without params',
+  })
   @ApiResponse({
     status: 200,
     schema: {
@@ -68,6 +72,9 @@ export class PdvController {
   }
 
   @ApiTags('Category')
+  @ApiOperation({
+    summary: 'Bring all categories with pagination params or without params',
+  })
   @ApiResponse({
     status: 200,
     schema: {
@@ -107,6 +114,10 @@ export class PdvController {
   }
 
   @ApiTags('Products')
+  @ApiOperation({
+    summary:
+      'Bring all products by category with pagination params or without params',
+  })
   @ApiResponse({
     status: 200,
     schema: {
@@ -154,6 +165,7 @@ export class PdvController {
   }
 
   @ApiTags('Products')
+  @ApiOperation({ summary: 'Bring additional by product' })
   @ApiResponse({
     status: 200,
     schema: {
