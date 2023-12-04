@@ -302,6 +302,20 @@ export class PdvController {
     }
   }
 
+  @ApiTags('Orders')
+  @ApiOperation({ summary: 'Update status by order' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: {
+        id: '35714e9f-a3d4-44e0-99a5-ba3c0a17f5e9',
+        product: {
+          name: 'Smash burguer da casa',
+        },
+        status: 'COMPLETED',
+      },
+    },
+  })
   @Post('orders/:orderId')
   async updateOrderStatus(
     @Param('orderId') orderId: string,
