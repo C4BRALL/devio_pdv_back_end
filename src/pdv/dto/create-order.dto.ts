@@ -11,16 +11,13 @@ export class CreateOrderDto {
   quantity: number;
 
   @ApiProperty()
-  additional: string[];
+  additional?: string[];
 
   @ApiProperty()
-  status: 'PENDING' | 'CANCELED' | 'PROGRESS' | 'COMPLETED' | 'WITHDRAWAL';
+  status?: 'PENDING' | 'CANCELED' | 'PROGRESS' | 'COMPLETED' | 'WITHDRAWAL';
 
   @ApiProperty()
   customer: string;
-
-  @ApiProperty()
-  groupOrderCode: string;
 
   @ApiProperty()
   payment_method: 'CREDITCARD' | 'DEBITCARD' | 'MONEY';

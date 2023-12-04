@@ -1,5 +1,5 @@
 import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HealthcheckService } from '../healthcheck.service';
 import { GetHealthRepository } from '../repositories/protocols/get-health-repository';
 
@@ -9,6 +9,7 @@ export class HealthcheckController {
   constructor(private readonly healthcheckService: HealthcheckService) {}
 
   @Get('health')
+  @ApiOperation({ summary: 'Bring server health and connection with database' })
   @ApiResponse({
     status: 200,
     schema: {
