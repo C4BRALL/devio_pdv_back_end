@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/config/prisma/prisma.service';
-import { UpdateOrderStatusUsecase } from 'src/core/usecases/pdv/update-order-status';
+import { UpdateOrderStatusUsecase } from '../../core/usecases/pdv/update-order-status';
+import { PrismaService } from '../../config/prisma/prisma.service';
 import { CreateOrderRepository } from './protocols/create-order-repository';
 import { ListOrdersRepository } from './protocols/list-orders-repository';
 import { UpdateOrderStatusRepository } from './protocols/update-order-status-repository';

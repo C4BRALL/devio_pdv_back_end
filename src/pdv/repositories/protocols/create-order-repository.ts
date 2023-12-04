@@ -1,4 +1,4 @@
-import { CreateOrderUsecase } from 'src/core/usecases/pdv/create-order';
+import { CreateOrderUsecase } from '../../../core/usecases/pdv/create-order';
 
 export abstract class CreateOrderRepository extends CreateOrderUsecase {
   abstract create(

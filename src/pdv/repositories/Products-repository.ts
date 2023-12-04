@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ListAdditionalByProductUsecase } from 'src/core/usecases/pdv/list-additional-by-product';
+import { ListAdditionalByProductUsecase } from '../../core/usecases/pdv/list-additional-by-product';
 import { PrismaService } from '../../config/prisma/prisma.service';
 import { ListProductsRepository } from './protocols/list-products-repository';
 import { ListProductsByCategoryRepository } from './protocols/products-by-category-repository';

@@ -1,4 +1,4 @@
-import { ListProductsUsecase } from 'src/core/usecases/pdv/list-products';
+import { ListProductsUsecase } from '../../../core/usecases/pdv/list-products';
 
 export abstract class ListProductsRepository extends ListProductsUsecase {
   abstract findAll(

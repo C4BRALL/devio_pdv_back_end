@@ -1,4 +1,4 @@
-import { ListCategoriesUsecase } from 'src/core/usecases/pdv/list-categories';
+import { ListCategoriesUsecase } from '../../../core/usecases/pdv/list-categories';
 
 export abstract class ListCategoriesRepository extends ListCategoriesUsecase {
   abstract findAll(

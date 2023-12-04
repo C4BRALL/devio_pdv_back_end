@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { HealthcheckService } from '../../../healthcheck/healthcheck.service';
-import { GetHealthUsecase } from '../../../core/usecases/get-health';
+import { GetHealthUsecase } from '../../../core/usecases/healthcheck/get-health';
 
 describe('HealthcheckService', () => {
   let healthcheckService: HealthcheckService;

@@ -1,4 +1,4 @@
-import { UpdateOrderStatusUsecase } from 'src/core/usecases/pdv/update-order-status';
+import { UpdateOrderStatusUsecase } from '../../../core/usecases/pdv/update-order-status';
 
 export abstract class UpdateOrderStatusRepository extends UpdateOrderStatusUsecase {
   abstract updateStatus(

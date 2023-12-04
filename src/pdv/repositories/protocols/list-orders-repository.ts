@@ -1,4 +1,4 @@
-import { ListOrdersUsecase } from 'src/core/usecases/pdv/list-orders';
+import { ListOrdersUsecase } from '../../../core/usecases/pdv/list-orders';
 
 export abstract class ListOrdersRepository extends ListOrdersUsecase {
   abstract findAll(
