@@ -9,10 +9,9 @@ export namespace CreateOrderUsecase {
     description: string;
     product_id: string;
     quantity: number;
-    additional: string[];
-    status: 'PENDING' | 'CANCELED' | 'PROGRESS' | 'COMPLETED' | 'WITHDRAWAL';
+    additional?: string[];
+    status?: 'PENDING' | 'CANCELED' | 'PROGRESS' | 'COMPLETED' | 'WITHDRAWAL';
     customer: string;
-    groupOrderCode: string;
     payment_method: 'CREDITCARD' | 'DEBITCARD' | 'MONEY';
     total_price: number;
     amount: number;

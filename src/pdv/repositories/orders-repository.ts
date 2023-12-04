@@ -23,7 +23,6 @@ export class OrdersRepository
         const additionalConnect = order.additional.map((id: string) => {
           return { id };
         });
-
         const createdOrder = await this.prisma.order.create({
           data: {
             description: order.description,
@@ -36,6 +35,7 @@ export class OrdersRepository
           },
           select: { id: true },
         });
+
         return createdOrder;
       });
       const ordersId = await Promise.all(orders);
@@ -54,13 +54,11 @@ export class OrdersRepository
     } catch (error) {
       throw new HttpException(
         {
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
           error,
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
-        {
-          cause: error,
-        },
+        { description: error },
       );
     }
   }
