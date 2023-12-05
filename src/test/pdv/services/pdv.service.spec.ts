@@ -7,7 +7,6 @@ import { ListOrdersRepository } from '../../../pdv/repositories/protocols/list-o
 import { UpdateOrderStatusRepository } from '../../../pdv/repositories/protocols/update-order-status-repository';
 import { ListProductsRepository } from '../../../pdv/repositories/protocols/list-products-repository';
 import { PdvService } from '../../../pdv/pdv.service';
-// Importe os outros repositórios necessários
 
 describe('PdvService', () => {
   let service: PdvService;
@@ -33,14 +32,22 @@ describe('PdvService', () => {
     expect(service).toBeDefined();
   });
 
-  // Aqui você pode adicionar seus testes
-  // Por exemplo, para testar o método listProducts:
   it('should list products', async () => {
-    const result = []; // Substitua isso pelo valor esperado
+    const result: ListProductsRepository.Result = [
+      {
+        id: 'string',
+        name: 'string',
+        image: 'string',
+        price: 0,
+        currency: 'string',
+        description: 'string',
+        category_id: 'string',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+    ];
     jest.spyOn(service, 'listProducts').mockImplementation(async () => result);
 
     expect(await service.listProducts({})).toBe(result);
   });
-
-  // Adicione testes semelhantes para os outros métodos
 });
